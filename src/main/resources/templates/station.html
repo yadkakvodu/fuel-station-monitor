@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${station.name}"></title>
+</head>
+
+<body>
+
+<h1 th:text="${station.name}"></h1>
+
+<p>
+    Адрес:
+    <span th:text="${station.address}"></span>
+</p>
+
+<h2>Топливо</h2>
+
+<div th:each="fuel : ${fuelStocks}">
+
+    <h3 th:text="${fuel.fuelType.name}"></h3>
+
+    <p>
+        Цена:
+        <span th:text="${fuel.price}"></span> ₽
+    </p>
+
+    <p>
+        Количество:
+        <span th:text="${fuel.quantity}"></span> л
+    </p>
+
+    <p>
+        Обновлено:
+        <span th:text="${fuel.updatedAt}"></span>
+    </p>
+
+    <hr>
+
+</div>
+
+<a href="/stations">← Назад к списку АЗС</a>
+
+</body>
+</html>

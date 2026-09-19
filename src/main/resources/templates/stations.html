@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>АЗС</title>
+</head>
+
+<body>
+
+<h1>АЗС</h1>
+
+<div th:each="station : ${stations}">
+
+    <h2 th:text="${station.name}"></h2>
+
+    <p th:text="${station.address}"></p>
+
+    <a th:href="@{/stations/{id}(id=${station.id})}">
+        Подробнее
+    </a>
+
+</div>
+
+</body>
+</html>
