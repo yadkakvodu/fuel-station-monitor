@@ -62,8 +62,6 @@ class StationServiceTest {
         verify(stationRepository).findById(1L);
     }
 
-
-
     @Test
     void shouldThrowExceptionWhenStationNotFound() {
 
@@ -77,6 +75,4 @@ class StationServiceTest {
 
         verify(stationRepository).findById(999L);
     }
-
-
 }

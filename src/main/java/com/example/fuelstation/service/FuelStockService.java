@@ -42,6 +42,21 @@ public class FuelStockService {
         return fuelStockRepository.save(fuelStock);
     }
 
+    public FuelStock minusFuel(Long stationId, Long fuelTypeId, int quantity) {
+
+        FuelStock fuelStock = fuelStockRepository.findByStationIdAndFuelTypeId(stationId, fuelTypeId)
+                .orElseThrow(() ->
+                new ResourceNotFoundException(
+                        "Not found ConsumeFuel"
+                )
+        );
+
+        int nowQuantity = fuelStock.getQuantity() - quantity;
+        fuelStock.setQuantity(nowQuantity);
+
+        return fuelStock;
+
+    }
 
 
 }

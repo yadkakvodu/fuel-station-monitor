@@ -55,4 +55,14 @@ public class StationRestController {
         );
     }
 
+    @PostMapping("/{stationId}/fuel/{fuelTypeId}/consume")
+    public FuelStock minusFuel(@PathVariable Long stationId,
+                               @PathVariable Long fuelTypeId,
+                               @RequestBody @Valid int quantity
+    ) {
+
+        return fuelStockService.minusFuel(stationId, fuelTypeId, quantity);
+
+    }
+
 }
