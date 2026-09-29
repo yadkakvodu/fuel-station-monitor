@@ -12,6 +12,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -74,5 +77,67 @@ class StationServiceTest {
         );
 
         verify(stationRepository).findById(999L);
+    }
+
+    @Test
+    void multiThreading() throws InterruptedException {
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(10);
+
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch finishLatch = new CountDownLatch(100);
+
+        for (int i = 0; i < 100; i++) {
+
+            int taskNumber = i;
+
+            threadPool.execute(() -> {
+
+                try {
+                    startLatch.await();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                System.out.println("Task: " + taskNumber + " | " + Thread.currentThread().getName());
+                finishLatch.countDown();
+            });
+        }
+
+        startLatch.countDown();
+        finishLatch.await();
+    }
+
+    @Test
+    void concurrentFuelConsumption() throws InterruptedException {
+        int threads = 10;
+        int fuelPerRequest = 100;
+
+        ExecutorService threadPool = Executors.newFixedThreadPool(threads);
+        CountDownLatch startLatch = new CountDownLatch(1);
+        CountDownLatch finishLatch = new CountDownLatch(threads);
+
+        for (int i = 0; i < threads; i++) {
+            threadPool.execute(() -> {
+                try {
+                    startLatch.await();
+
+                    // Здесь позже будет реальное списание топлива
+                    System.out.println(
+                            "Thread: " + Thread.currentThread().getName()
+                    );
+
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                } finally {
+                    finishLatch.countDown();
+                }
+            });
+        }
+
+        startLatch.countDown();
+        finishLatch.await();
+
+        threadPool.shutdown();
     }
 }

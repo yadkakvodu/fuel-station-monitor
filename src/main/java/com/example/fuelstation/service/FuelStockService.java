@@ -5,6 +5,7 @@ import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.exception.ResourceNotFoundException;
 import com.example.fuelstation.repository.FuelStockRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +43,7 @@ public class FuelStockService {
         return fuelStockRepository.save(fuelStock);
     }
 
+    @Transactional
     public FuelStock minusFuel(Long stationId, Long fuelTypeId, int quantity) {
 
         FuelStock fuelStock = fuelStockRepository.findByStationIdAndFuelTypeId(stationId, fuelTypeId)
@@ -53,6 +55,7 @@ public class FuelStockService {
 
         int nowQuantity = fuelStock.getQuantity() - quantity;
         fuelStock.setQuantity(nowQuantity);
+        fuelStockRepository.save(fuelStock);
 
         return fuelStock;
 
