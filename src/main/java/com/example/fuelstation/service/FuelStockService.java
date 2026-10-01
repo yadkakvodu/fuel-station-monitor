@@ -4,6 +4,7 @@ import com.example.fuelstation.dto.FuelStockUpdateRequest;
 import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.exception.ResourceNotFoundException;
 import com.example.fuelstation.repository.FuelStockRepository;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,9 +15,11 @@ import java.util.List;
 public class FuelStockService {
 
     private final FuelStockRepository fuelStockRepository;
+    private final FuelStockTransactionService fuelStockTransactionService;
 
-    public FuelStockService(FuelStockRepository fuelStockRepository) {
+    public FuelStockService(FuelStockRepository fuelStockRepository, FuelStockTransactionService fuelStockTransactionService) {
         this.fuelStockRepository = fuelStockRepository;
+        this.fuelStockTransactionService = fuelStockTransactionService;
     }
 
     public List<FuelStock> getFuelByStation(Long stationId) {
@@ -43,22 +46,29 @@ public class FuelStockService {
         return fuelStockRepository.save(fuelStock);
     }
 
-    @Transactional
-    public FuelStock minusFuel(Long stationId, Long fuelTypeId, int quantity) {
+    public FuelStock minusFuel(
+            Long stationId,
+            Long fuelTypeId,
+            int quantity
+    ) {
+        int maxAttempts = 3;
 
-        FuelStock fuelStock = fuelStockRepository.findByStationIdAndFuelTypeId(stationId, fuelTypeId)
-                .orElseThrow(() ->
-                new ResourceNotFoundException(
-                        "Not found ConsumeFuel"
-                )
-        );
+        for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+            try {
+                return fuelStockTransactionService.minusFuelOnce(
+                        stationId,
+                        fuelTypeId,
+                        quantity
+                );
+            } catch (ObjectOptimisticLockingFailureException e) {
 
-        int nowQuantity = fuelStock.getQuantity() - quantity;
-        fuelStock.setQuantity(nowQuantity);
-        fuelStockRepository.save(fuelStock);
+                if (attempt == maxAttempts) {
+                    throw e;
+                }
+            }
+        }
 
-        return fuelStock;
-
+        throw new IllegalStateException("Unexpected error");
     }
 
 

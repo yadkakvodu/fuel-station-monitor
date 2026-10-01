@@ -122,7 +122,6 @@ class StationServiceTest {
                 try {
                     startLatch.await();
 
-                    // Здесь позже будет реальное списание топлива
                     System.out.println(
                             "Thread: " + Thread.currentThread().getName()
                     );
