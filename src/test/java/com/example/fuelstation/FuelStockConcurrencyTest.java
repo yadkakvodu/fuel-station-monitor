@@ -1,5 +1,6 @@
 package com.example.fuelstation;
 
+import com.example.fuelstation.dto.ConsumeFuelRequest;
 import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.repository.FuelStockRepository;
 import com.example.fuelstation.service.FuelStockService;
@@ -24,7 +25,6 @@ class FuelStockConcurrencyTest {
     void concurrentFuelConsumption() throws InterruptedException {
 
         int threads = 10;
-        int fuelPerRequest = 100;
 
         ExecutorService executor =
                 Executors.newFixedThreadPool(threads);
@@ -41,7 +41,7 @@ class FuelStockConcurrencyTest {
 
                 try {
                     startLatch.await();
-                    fuelStockService.minusFuel(1L, 1L, fuelPerRequest);
+                    fuelStockService.minusFuel(1L, 1L, 100);
 
                 } catch (Exception e) {
                     System.out.println(

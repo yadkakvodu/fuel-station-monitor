@@ -1,5 +1,6 @@
 package com.example.fuelstation.service;
 
+import com.example.fuelstation.dto.ConsumeFuelRequest;
 import com.example.fuelstation.dto.FuelStockUpdateRequest;
 import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.exception.ResourceNotFoundException;
@@ -51,7 +52,7 @@ public class FuelStockService {
             Long fuelTypeId,
             int quantity
     ) {
-        int maxAttempts = 3;
+        int maxAttempts = 10;
 
         for (int attempt = 1; attempt <= maxAttempts; attempt++) {
             try {

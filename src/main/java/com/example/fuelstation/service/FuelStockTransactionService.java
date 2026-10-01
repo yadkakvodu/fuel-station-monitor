@@ -1,5 +1,6 @@
 package com.example.fuelstation.service;
 
+import com.example.fuelstation.dto.ConsumeFuelRequest;
 import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.exception.ResourceNotFoundException;
 import com.example.fuelstation.repository.FuelStockRepository;
@@ -31,13 +32,17 @@ public class FuelStockTransactionService {
                                 )
                         );
 
-        int nowQuantity =
-                fuelStock.getQuantity() - quantity;
+        if (fuelStock.getQuantity() >= quantity) {
+            int nowQuantity = fuelStock.getQuantity() - quantity;
 
-        fuelStock.setQuantity(nowQuantity);
+            fuelStock.setQuantity(nowQuantity);
 
-        fuelStockRepository.save(fuelStock);
+            fuelStockRepository.save(fuelStock);
 
-        return fuelStock;
+            return fuelStock;
+        } else {
+            throw new IllegalArgumentException("400 NOT FOUND : ТОПЛИВА НЕДОСТАТОЧНО");
+        }
+
     }
 }
