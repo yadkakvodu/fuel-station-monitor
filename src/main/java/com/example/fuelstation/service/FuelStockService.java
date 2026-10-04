@@ -5,6 +5,8 @@ import com.example.fuelstation.dto.FuelStockUpdateRequest;
 import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.exception.ResourceNotFoundException;
 import com.example.fuelstation.repository.FuelStockRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,10 +25,12 @@ public class FuelStockService {
         this.fuelStockTransactionService = fuelStockTransactionService;
     }
 
+    @Cacheable("fuel")
     public List<FuelStock> getFuelByStation(Long stationId) {
         return fuelStockRepository.findByStationId(stationId);
     }
 
+    @CacheEvict(value = "fuel", key = "#stationId")
     public FuelStock updateFuel(
             Long stationId,
             Long fuelTypeId,
