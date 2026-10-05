@@ -51,6 +51,7 @@ public class FuelStockService {
         return fuelStockRepository.save(fuelStock);
     }
 
+    @CacheEvict(value = "fuel", key = "#stationId")
     public FuelStock minusFuel(
             Long stationId,
             Long fuelTypeId,
