@@ -37,7 +37,8 @@ class FuelStockIntegrationTest {
 
         Station station = new Station(
                 "Test Station",
-                "Test Address"
+                "Test Address",
+                "Test City"
         );
 
         station = stationRepository.save(station);
