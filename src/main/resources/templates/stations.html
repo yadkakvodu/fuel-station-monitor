@@ -3,22 +3,114 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>АЗС</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>АЗС — Fuel Station Monitor</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<h1>АЗС</h1>
+<div class="page-wrapper">
 
-<div th:each="station : ${stations}">
+    <div th:replace="~{fragments/header :: header}"></div>
 
-    <h2 th:text="${station.name}"></h2>
+    <main class="container main-content">
 
-    <p th:text="${station.address}"></p>
+        <section class="hero">
+            <div class="hero-content">
+                <span class="eyebrow">FUEL STATION MONITOR</span>
 
-    <a th:href="@{/stations/{id}(id=${station.id})}">
-        Подробнее
-    </a>
+                <h1>
+                    Найдите свою
+                    <span class="text-accent">АЗС</span>
+                </h1>
+
+                <p class="hero-description">
+                    Информация о заправочных станциях,
+                    ценах и доступности топлива в одном месте.
+                </p>
+            </div>
+
+            <div class="hero-decoration" aria-hidden="true">
+                <div class="fuel-symbol">F</div>
+                <div class="decoration-circle circle-one"></div>
+                <div class="decoration-circle circle-two"></div>
+            </div>
+        </section>
+
+        <section class="stations-section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">КАТАЛОГ</span>
+                    <h2>Заправочные станции</h2>
+                </div>
+
+                <span class="count-badge"
+                      th:text="${#lists.size(stations)} + ' станций'">
+                    0 станций
+                </span>
+            </div>
+
+            <div class="empty-state"
+                 th:if="${#lists.isEmpty(stations)}">
+                <div class="empty-icon">⌕</div>
+                <h3>Станций пока нет</h3>
+                <p>Когда станции появятся в системе, они будут отображаться здесь.</p>
+            </div>
+
+            <div class="stations-grid"
+                 th:unless="${#lists.isEmpty(stations)}">
+
+                <article class="station-card"
+                         th:each="station : ${stations}">
+
+                    <div class="station-card-top">
+                        <div class="station-icon">⌁</div>
+                        <span class="station-label">АЗС</span>
+                    </div>
+
+                    <h3 class="station-name"
+                        th:text="${station.name}">
+                        Название АЗС
+                    </h3>
+
+                    <div class="station-address"
+                         th:if="${station.location != null}">
+
+                        <span class="address-icon">⌖</span>
+
+                        <span th:text="${station.location.city
+                            + ', ' + station.location.address}">
+                            Адрес станции
+                        </span>
+                    </div>
+
+                    <div class="station-address muted"
+                         th:unless="${station.location != null}">
+                        <span class="address-icon">⌖</span>
+                        Адрес не указан
+                    </div>
+
+                    <div class="card-divider"></div>
+
+                    <a class="button button-primary station-link"
+                       th:href="@{/stations/{id}(id=${station.id})}">
+                        Подробнее
+                        <span aria-hidden="true">→</span>
+                    </a>
+
+                </article>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </div>
 

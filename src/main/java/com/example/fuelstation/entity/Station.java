@@ -16,17 +16,15 @@ public class Station {
 
     private String name;
 
-    @JoinColumn(name = "location_address")
-    private String address;
-
-    @JoinColumn(name = "location_city")
-    private String city;
+    @OneToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
 
 
-    public Station(String name, String address, String city) {
+    public Station(String name, Location location) {
         this.name = name;
-        this.address = address;
-        this.city = city;
+        this.location = location;
+
     }
 
     public Long getId() {
@@ -37,11 +35,7 @@ public class Station {
         return name;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getCity() {
-        return city;
+    public Location getLocation() {
+        return location;
     }
 }

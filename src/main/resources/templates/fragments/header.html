@@ -1,0 +1,19 @@
+<header class="site-header" th:fragment="header">
+    <div class="container header-inner">
+
+        <a class="brand" th:href="@{/stations}">
+            <span class="brand-icon">F</span>
+            <span class="brand-text">
+                Fuel Station
+                <span class="brand-accent">Monitor</span>
+            </span>
+        </a>
+
+        <nav class="navigation">
+            <a class="nav-link active" th:href="@{/stations}">
+                Все АЗС
+            </a>
+        </nav>
+
+    </div>
+</header>

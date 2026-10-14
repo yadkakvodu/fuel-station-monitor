@@ -3,44 +3,138 @@
 
 <head>
     <meta charset="UTF-8">
-    <title th:text="${station.name}"></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${station.name} + ' — Fuel Station Monitor'">
+        АЗС
+    </title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<h1 th:text="${station.name}"></h1>
+<div class="page-wrapper">
 
-<p>
-    Адрес:
-    <span th:text="${station.address}"></span>
-</p>
+    <div th:replace="~{fragments/header :: header}"></div>
 
-<h2>Топливо</h2>
+    <main class="container main-content detail-content">
 
-<div th:each="fuel : ${fuelStocks}">
+        <a class="back-link" th:href="@{/stations}">
+            <span aria-hidden="true">←</span>
+            Все станции
+        </a>
 
-    <h3 th:text="${fuel.fuelType.name}"></h3>
+        <section class="station-hero">
 
-    <p>
-        Цена:
-        <span th:text="${fuel.price}"></span> ₽
-    </p>
+            <div class="station-hero-icon">⌁</div>
 
-    <p>
-        Количество:
-        <span th:text="${fuel.quantity}"></span> л
-    </p>
+            <div class="station-hero-info">
+                <span class="eyebrow">ЗАПРАВОЧНАЯ СТАНЦИЯ</span>
 
-    <p>
-        Обновлено:
-        <span th:text="${fuel.updatedAt}"></span>
-    </p>
+                <h1 th:text="${station.name}">
+                    Название АЗС
+                </h1>
 
-    <hr>
+                <p class="detail-address"
+                   th:if="${station.location != null}"
+                   th:text="${station.location.city
+                       + ', ' + station.location.address}">
+                    Адрес станции
+                </p>
+
+                <p class="detail-address muted"
+                   th:unless="${station.location != null}">
+                    Адрес не указан
+                </p>
+            </div>
+
+        </section>
+
+        <section class="fuel-section">
+
+            <div class="section-heading">
+                <div>
+                    <span class="eyebrow">ИНФОРМАЦИЯ</span>
+                    <h2>Топливо на станции</h2>
+                </div>
+
+                <span class="count-badge"
+                      th:text="${#lists.size(fuelStocks)} + ' позиций'">
+                    0 позиций
+                </span>
+            </div>
+
+            <div class="empty-state"
+                 th:if="${#lists.isEmpty(fuelStocks)}">
+                <div class="empty-icon">⌕</div>
+                <h3>Информация о топливе отсутствует</h3>
+                <p>Для этой станции пока нет записей об остатках топлива.</p>
+            </div>
+
+            <div class="fuel-list"
+                 th:unless="${#lists.isEmpty(fuelStocks)}">
+
+                <article class="fuel-card"
+                         th:each="fuel : ${fuelStocks}">
+
+                    <div class="fuel-card-main">
+
+                        <div class="fuel-type-icon">F</div>
+
+                        <div class="fuel-info">
+                            <h3 th:text="${fuel.fuelType.name}">
+                                АИ-92
+                            </h3>
+
+                            <p class="fuel-updated">
+                                Последнее обновление:
+                                <span th:text="${fuel.updatedAt}">
+                                    —
+                                </span>
+                            </p>
+                        </div>
+
+                    </div>
+
+                    <div class="fuel-card-data">
+
+                        <div class="fuel-metric">
+                            <span class="metric-label">Цена за литр</span>
+
+                            <strong class="fuel-price">
+                                <span th:text="${fuel.price}">0.00</span>
+                                <span>₽</span>
+                            </strong>
+                        </div>
+
+                        <div class="fuel-metric">
+                            <span class="metric-label">Остаток</span>
+
+                            <strong class="fuel-quantity">
+                                <span th:text="${fuel.quantity}">0</span>
+                                <span>л</span>
+                            </strong>
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+            <p class="data-notice">
+                Данные отображаются по последнему сохранённому состоянию
+                в системе. Время обновления указано для каждой позиции.
+            </p>
+
+        </section>
+
+    </main>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
 
 </div>
-
-<a href="/stations">← Назад к списку АЗС</a>
 
 </body>
 </html>

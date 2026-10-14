@@ -3,6 +3,7 @@ package com.example.fuelstation;
 
 import com.example.fuelstation.entity.FuelStock;
 import com.example.fuelstation.entity.FuelType;
+import com.example.fuelstation.entity.Location;
 import com.example.fuelstation.entity.Station;
 import com.example.fuelstation.repository.FuelStockRepository;
 import com.example.fuelstation.repository.FuelTypeRepository;
@@ -37,8 +38,7 @@ class FuelStockIntegrationTest {
 
         Station station = new Station(
                 "Test Station",
-                "Test Address",
-                "Test City"
+                new Location()
         );
 
         station = stationRepository.save(station);
